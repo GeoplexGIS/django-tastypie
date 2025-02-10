@@ -1706,6 +1706,9 @@ class Resource(metaclass=DeclarativeMetaclass):
                 # Don't add if it is the id/pk field, can't patch that.
                 if key == 'id' or key == 'pk':
                     continue
+                # If the field is readonly, we can't update it.
+                if getattr(self.fields[key], 'readonly', False):
+                    continue
                 # No more checks.  Add it.
                 bundle.update_fields.append(key)
         self.update_in_place(request, bundle, deserialized)
